@@ -49,7 +49,7 @@ public class Fila {
       return "fila vazia";
     String s = "";
     for (int i = primeiro, cont = 0; cont < ocupacao; cont++) {
-      s += dados[i] + " ";
+      s += dados[i] + "\n";
       i = proxima(i);
     }
     return s;
