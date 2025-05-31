@@ -58,33 +58,42 @@ public class TesteFilaDeImpressao {
     }
   }
 
-  // Overload do método buscarArquivo para a fila de reimpressao
+  // Overload do método buscarArquivo para a pilha de reimpressao
   private static void buscarArquivo(Pilha pilhaReimpressao, String nomeArquivo) {
     if (pilhaReimpressao.pilhaVazia()) {
-      System.out.println("A fila de reimpressao está vazia. Nenhum arquivo para buscar.");
-      return;
+        System.out.println("A pilha de reimpressao está vazia. Nenhum arquivo para buscar.");
+        return;
     }
 
     boolean encontrado = false;
-    Pilha aux = new Pilha();
-    
+    Pilha aux = new Pilha(pilhaReimpressao.getTamanho());
+    int posicao = 1;
+    int posicaoEncontrada = -1;
+    Arquivo arquivoEncontrado = null;
+
+    // Percorre a pilha desempilhando e empilhando em aux
     while (!pilhaReimpressao.pilhaVazia()) {
-      Arquivo arquivo = pilhaReimpressao.pop();
-      if (arquivo.getName().equalsIgnoreCase(nomeArquivo)) {
-        System.out.println("Arquivo encontrado na fila de reimpressao: " + arquivo.toString() + 
-                           (arquivo.isPrinted() ? " (já impresso)" : " (nao impresso)"));
-        encontrado = true;
-      }
-      aux.push(arquivo);
+        Arquivo arquivo = pilhaReimpressao.pop();
+        if (!encontrado && arquivo.getName().equalsIgnoreCase(nomeArquivo)) {
+            arquivoEncontrado = arquivo;
+            posicaoEncontrada = posicao;
+            encontrado = true;
+        }
+        aux.push(arquivo);
+        posicao++;
     }
 
     // Restaura a pilha original
     while (!aux.pilhaVazia()) {
-      pilhaReimpressao.push(aux.pop());
+        pilhaReimpressao.push(aux.pop());
     }
 
-    if (!encontrado) {
-      System.out.println("Arquivo nao encontrado na fila de reimpressao.");
+    if (encontrado) {
+        System.out.println("Arquivo encontrado na pilha de reimpressao: " + arquivoEncontrado.toString() +
+            (arquivoEncontrado.isPrinted() ? " (já impresso)" : " (nao impresso)") +
+            " posiçao na pilha: " + posicaoEncontrada + "º (do topo para a base)");
+    } else {
+        System.out.println("Arquivo nao encontrado na pilha de reimpressao.");
     }
   }
 
